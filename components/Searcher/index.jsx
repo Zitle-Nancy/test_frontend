@@ -24,7 +24,6 @@ const Searcher = () => (
       <InputGroup size="lg">
         <Input
           pr="4.5rem"
-          isFullWidth='true'
           type="text"
           size="lg"
           background="#fff"
