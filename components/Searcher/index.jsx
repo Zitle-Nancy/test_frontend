@@ -18,7 +18,11 @@ const Searcher = () => {
   }
 
   return (
-    <Flex justify="center" align="center">
+    <Flex 
+      justify="center"
+      align="center"
+      backgroundColor="#fff159"
+    >
       <Image
         boxSize="70px"
         pr="1rem"
