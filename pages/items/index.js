@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from "react"
-import { Container } from "@chakra-ui/react"
-import { useRouter } from 'next/router'
-import { Flex } from "@chakra-ui/react"
-import { Image } from "@chakra-ui/react"
-import { Text } from "@chakra-ui/react"
-import { Box } from "@chakra-ui/react"
+import { Flex, Image, Text, Box, Tag, TagLabel, Container } from "@chakra-ui/react"
 import Link from 'next/link'
-import {Tag, TagLabel} from "@chakra-ui/react"
+import axios from 'axios';
 
-const axios = require('axios');
-
-const Products = () => {
-  const router = useRouter()
+const Products = (props) => {
   const [results, setResults] = useState([]);
   const getProducts = () => {
-    const {search} = router.query
+    const {search} = props
     return axios.get(`/api/items?q=${search}`)
   }
   
@@ -30,11 +22,10 @@ const Products = () => {
     .catch(error => console.log(error))
   },[])
 
-  console.log(results, 'results')
   return(
     <Container borderRadius="4px" maxWidth="885px"  backgroundColor="#fff">
       {results.map(item => (
-          <Link href={`/items/${item.id}`}>
+          <Link href={`/items/${item.id}`} key={item.id}>
             <Flex w="100%" 
               justify="space-between" 
               p="20px 50px 20px 0" 
@@ -71,4 +62,12 @@ const Products = () => {
   )
 }
 
+export async function getServerSideProps(context) {
+  const { search } = context.query;
+  return {
+    props: {
+      search,
+    },
+  };
+}
 export default Products;

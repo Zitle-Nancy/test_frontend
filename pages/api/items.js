@@ -1,9 +1,10 @@
 const axios = require('axios');
-
+const { URL } = require('url');
 export default (req, res) => {
-  console.log(req.query.q, 'valor del query')
-  const query = req.query.q;
-  axios.get(encodeURI(`https://api.mercadolibre.com/sites/MLA/search?q=​${query}`))
+  const query = req.query.q.trim();
+  const myUrl = new URL(`https://api.mercadolibre.com/sites/MLA/search`)
+  myUrl.search = `q=${query}`
+  axios.get(myUrl.href)
   .then(response => {
     const { data } = response;
     res.status(200).json({
