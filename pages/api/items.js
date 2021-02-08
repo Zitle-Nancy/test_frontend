@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 export default (req, res) => {
+  console.log(req.query.q, 'valor del query')
   const query = req.query.q;
   axios.get(encodeURI(`https://api.mercadolibre.com/sites/MLA/search?q=​${query}`))
   .then(response => {
@@ -11,7 +12,7 @@ export default (req, res) => {
         lastname: "mercado libre"
       },
       categories: data.filters?.[0]?.values?.[0]?.path_from_root?.map(value => value.name) ?? [],
-      items:data.results.map(result => ({
+      items:data.results.slice(0,4).map(result => ({
         id: result.id,
         title: result.title,
         price:{
@@ -25,5 +26,4 @@ export default (req, res) => {
     })
   })
   .catch(error => console.log(error))
-  
 }
