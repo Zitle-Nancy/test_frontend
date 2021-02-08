@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { Flex, Image, Text, Box, Tag, TagLabel, Container } from "@chakra-ui/react"
 import Link from 'next/link'
+import Breadcrumb from '../../components/Breadcrumb'
 import axios from 'axios';
 
 const Products = (props) => {
   const [results, setResults] = useState([]);
+  const [categories, setCategories] = useState([])
   const getProducts = () => {
     const {search} = props
     return axios.get(`/api/items?q=${search}`)
@@ -18,6 +20,7 @@ const Products = (props) => {
     .then(results => {
       if(results.status === 200){
         setResults(results.data.items)
+        setCategories(results.data.categories)
       }
     })
     .catch(error => console.log(error))
@@ -25,6 +28,7 @@ const Products = (props) => {
 
   return(
     <Container borderRadius="4px" maxWidth="885px"  backgroundColor="#fff">
+      <Breadcrumb categories={categories} />
       {results.map(item => (
           <Link 
             href={`/items/${item.id}`}
