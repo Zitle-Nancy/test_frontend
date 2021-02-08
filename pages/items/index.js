@@ -10,13 +10,14 @@ const Products = (props) => {
     return axios.get(`/api/items?q=${search}`)
   }
   
+  const priceWithCommas = (price = '') => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
   useEffect(() => {
     getProducts()
     .then(results => {
       if(results.status === 200){
         setResults(results.data.items)
-      }else{
-        setResults([])
       }
     })
     .catch(error => console.log(error))
@@ -25,7 +26,10 @@ const Products = (props) => {
   return(
     <Container borderRadius="4px" maxWidth="885px"  backgroundColor="#fff">
       {results.map(item => (
-          <Link href={`/items/${item.id}`} key={item.id}>
+          <Link 
+            href={`/items/${item.id}`}
+            key={item.id}
+          >
             <Flex w="100%" 
               justify="space-between" 
               p="20px 50px 20px 0" 
@@ -41,7 +45,7 @@ const Products = (props) => {
                 />
                 <Box ml="3" paddingTop="1rem" w="calc(100% - 208px)">
                   <Text fontWeight="bold">
-                    $ {item.price.amount} &nbsp;
+                    $ {priceWithCommas(item.price.amount)} &nbsp;
                     {item.free_shipping && 
                       <Tag colorScheme="green" size="md">
                         <TagLabel>Envío gratis</TagLabel>

@@ -1,34 +1,73 @@
-import { Container } from "@chakra-ui/react"
-import { Flex } from "@chakra-ui/react"
-import { Image } from "@chakra-ui/react"
-import { Text } from "@chakra-ui/react"
-import { Box } from "@chakra-ui/react"
-const Product = () => {
+import React, {useState, useEffect} from 'react'
+import { Container, Button, Flex, Image, Text, Box } from "@chakra-ui/react"
+import axios from 'axios';
+const Product = (props) => {
+  const [product, setProduct] = useState(null);
+  useEffect(() => {
+    getProduct()
+    .then(result => {
+      if(result.status === 200){
+        setProduct(result.data)
+      }
+    })
+    .catch(error => console.log(error))
+  }, [])
+
+  const getProduct = () => {
+    const { id } = props
+    return axios.get(`/api/items/${id}`)
+  }
+
+  const priceWithCommas = (price = '') => {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  
   return(
-    <Container borderRadius="4px" maxWidth="885px"  border="solid red 2px">
-        <Flex w="100%" justify="space-between" p="20px 50px 20px 0" cursor="pointer">
-          <Flex>
-            <Image
-              boxSize="160px"
-              objectFit="contain"
-              src="https://http2.mlstatic.com/D_NQ_NP_748240-MLM43335890119_092020-V.webp"
-              alt="Segun Adebayo"
-            />
-            <Box ml="3" paddingTop="1rem" w="calc(100% - 208px)">
-              <Text fontWeight="bold">
-                $ 1.980
-              </Text>
-              <Text fontSize="md" paddingTop="0.5rem">
-                Huawei Matebook D 14 R7, Amd Ryzen 7,512 Gb + 8 Gb Ram, Gris
+    <Container borderRadius="4px" maxWidth="885px" background="#fff">
+        <Flex w="100%" justify="space-between" p="20px">
+          <Flex h="100%" w="70%" flexDirection="column" alignItems="start">
+            <Box boxSize="xs" >
+              <Image
+                w="100%"
+                h="100%"
+                objectFit="contain"
+                src={((product || {}).item || {}).picture}
+                alt={((product || {}).item || {}).title}
+              />
+            </Box>
+            <Box>
+              <Text fontSize="md" paddingTop="2.5rem" fontWeight="bold">Descripción del producto</Text>
+              <Text fontSize="sm" paddingTop=".5rem">
+                {((product || {}).item || {}).description}
               </Text>
             </Box>
           </Flex>
-          
+            <Box ml="3">
+              <Text fontSize="xs">
+                {((product || {}).item || {}).condition} - {((product || {}).item || {}).sold_quantity} vendidos
+              </Text>
+              <Text fontSize="md" paddingTop="0.2rem" fontWeight="bold">
+                  {((product || {}).item || {}).title}
+              </Text>
+              <Text fontWeight="bold" fontSize="md" padding="1rem 0 1.5rem 0">
+                $ {priceWithCommas((((product || {}).item || {}).price || {}).amount)}
+              </Text>
+              <Button colorScheme="blue"  color="#fff" w="19rem" h="2.5rem">
+                Comprar
+              </Button>
+            </Box>
         </Flex>
-        <Text fontSize="sm" paddingTop="2.5rem">Descripción del producto</Text>
-        <Text fontSize="sm" paddingTop="2.5rem">Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, ipsam ea aperiam et voluptate odit. Ratione cupiditate animi voluptas porro ab dolorum, magnam consequatur numquam earum! Aut laudantium laboriosam exercitationem?</Text>
     </Container>
   )
+}
+
+export async function getServerSideProps(context) {
+  const { id } = context.query;
+  return {
+    props: {
+      id,
+    },
+  };
 }
 
 export default Product;

@@ -1,13 +1,14 @@
 const axios = require('axios');
 
-export default (req, res) => {
-  const id = req.query.q;
-
-  const description = getDescription('/MLA903945107')
-  .then(result => console.log(result, 'result '))
+export default async (req, res) => {
+  const {id} = req.query;
+  const description = await getDescription(`/${id}`)
+  .then(result => {
+    return result.data.plain_text
+  })
   .catch(error => console.log(error))
-  
-  axios.get(encodeURI(`https://api.mercadolibre.com/items/MLA903945107`))
+
+  axios.get(encodeURI(`https://api.mercadolibre.com/items/${id}`))
   .then(response => {
     const { data } = response;
 
