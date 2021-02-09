@@ -1,14 +1,12 @@
 import React, {useState} from 'react'
 import Router from 'next/router'
-import { Image } from "@chakra-ui/react"
-import { Input, InputGroup, InputRightElement } from "@chakra-ui/react"
-import { IconButton } from "@chakra-ui/react"
+import Link from "next/link";
+import { Image,Input, InputGroup, InputRightElement, IconButton, Flex, FormControl } from "@chakra-ui/react"
 import { Search2Icon } from '@chakra-ui/icons'
-import { Flex } from "@chakra-ui/react"
-import { FormControl } from "@chakra-ui/react"
 
-const Searcher = () => {
-  const [value, setValue] = useState('');
+
+const Searcher = (props) => {
+  const [value, setValue] = useState(props.search || '');
   const search = (event) => {
     event.preventDefault();
     Router.push({
@@ -23,13 +21,17 @@ const Searcher = () => {
       align="center"
       backgroundColor="#fff159"
     >
-      <Image
-        boxSize="70px"
-        pr="1rem"
-        objectFit="contain"
-        src="logo.png"
-        alt="Mercado Libre"
-      />
+    <Link href="/" cursor="pointer">
+      <a>
+        <Image
+          boxSize="70px"
+          pr="1rem"
+          objectFit="contain"
+          src="/logo.png"
+          alt="Mercado Libre"
+        />
+      </a>
+    </Link>
       <FormControl id="email" width="70%">
         <form onSubmit={search}>
           <InputGroup size="lg">
@@ -43,6 +45,7 @@ const Searcher = () => {
               boxShadow= "0 1px 2px 0 rgb(0 0 0 / 10%)"
               h="2.5rem"
               onChange={event => setValue(event.target.value)}
+              value={value}
             />
             <InputRightElement h="100%" display="flex" justifyContent="flex-end">
               <IconButton

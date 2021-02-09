@@ -24,7 +24,7 @@ export default async (req, res) => {
           currency:data.currency_id,
           amount:data.price
         },
-        picture:data.thumbnail,
+        picture:data.pictures?.[0]?.secure_url,
         condition: data.condition,
         free_shipping:data.shipping.free_shipping,
         sold_quantity: data.sold_quantity,
